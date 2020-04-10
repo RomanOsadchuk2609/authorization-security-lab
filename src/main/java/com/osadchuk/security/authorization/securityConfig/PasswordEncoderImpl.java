@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PasswordEncoderImpl implements PasswordEncoder {
-	
-	private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-	
+
+	private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
 	@Override
 	public String encode(CharSequence rawPassword) {
 		return bCryptPasswordEncoder.encode(rawPassword);
 	}
-	
+
 	@Override
 	public boolean matches(CharSequence rawPassword, String encodedPassword) {
 		return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);

@@ -25,12 +25,12 @@ import java.util.List;
 @Slf4j
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-	
+
 	@Value("classpath:static/users.json")
 	private Resource resourceFile;
-	
+
 	private List<User> userList = Collections.emptyList();
-	
+
 	@PostConstruct
 	public void initUsers() {
 		Gson gson = new Gson();
@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			log.error("Could not read static/users.json file.", e);
 		}
 	}
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 		return userList.stream()
