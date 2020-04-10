@@ -23,14 +23,24 @@ public class SecurityTestRestController {
 			new SecretResource(2, "recourse 2", "value 2"),
 			new SecretResource(3, "recourse 3", "value 3"));
 
+	/**
+	 * Endpoint Basic secured by authorization
+	 *
+	 * @return {@link List<SecretResource>} list
+	 */
 	@GetMapping("/getResources")
-	public List<SecretResource> login() {
+	public List<SecretResource> getResources() {
 		return SECRET_RESOURCES;
 	}
 
+	/**
+	 * Not secured implementation of {@link #getResources()}. Is using for testing
+	 *
+	 * @return {@link List<SecretResource>} list
+	 */
 	@Hidden
 	@GetMapping("/test")
-	public List<SecretResource> loginTest() {
+	public List<SecretResource> test() {
 		return SECRET_RESOURCES;
 	}
 }
