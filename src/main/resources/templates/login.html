@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="sidenav">
+    <div class="login-main-text">
+        <h2>Login Page</h2>
+    </div>
+</div>
+<div class="main">
+    <form th:action="@{/login}" method="post">
+        <fieldset>
+            <div>
+                <label>Username</label>
+                <input type="text" name="j_username" id="j_username" placeholder="Username" required="required"
+                       autofocus="autofocus"/>
+            </div>
+            <div>
+                <label>Password</label>
+                <input type="password" name="j_password" id="j_password" placeholder="Password" required="required"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Login"/>
+            </div>
+        </fieldset>
+    </form>
+</div>
+</body>
+</html>

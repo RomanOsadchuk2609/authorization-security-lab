@@ -52,4 +52,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				.findFirst()
 				.orElseThrow(() -> new UsernameNotFoundException("User with username \"" + username + "\" not found"));
 	}
+
+	public Integer getUsersAccessLevelByUsername(String username) {
+		return userList.stream()
+				.filter(user -> username.equals(user.getUsername()))
+				.map(User::getAccessLevel)
+				.findFirst()
+				.orElseThrow(() -> new UsernameNotFoundException("User with username \"" + username + "\" not found"));
+	}
 }

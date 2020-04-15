@@ -2,7 +2,7 @@
  * Copyright (c) 2020 Roman Osadchuk. ALL RIGHTS RESERVED.
  */
 
-package com.osadchuk.security.authorization.rest;
+package com.osadchuk.security.authorization.controller.rest;
 
 import com.osadchuk.security.authorization.model.SecretResource;
 import io.swagger.v3.oas.annotations.Hidden;

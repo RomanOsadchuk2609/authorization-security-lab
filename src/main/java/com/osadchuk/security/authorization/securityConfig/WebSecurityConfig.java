@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Web Security configuration
@@ -49,6 +50,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/test").permitAll()
 				.anyRequest().authenticated()
+				.and()
+				.formLogin()
+				.usernameParameter("j_username")
+				.passwordParameter("j_password")
+				.loginPage("/login")
+				.defaultSuccessUrl("/swagger", true)
+				.permitAll()
+				.and()
+				.logout()
+				.logoutUrl("/logout")
+				.invalidateHttpSession(true)
+				.deleteCookies("JSESSIONID")
+				.logoutSuccessUrl("/login")
+				.permitAll()
 				.and()
 				.httpBasic();
 	}

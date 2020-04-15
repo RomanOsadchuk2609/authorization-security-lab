@@ -11,15 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class ApiResponse {
 
-	private int id;
+	private SecretResource data;
 
-	private String username;
-
-	private String password;
-
-	private String role;
-
-	private int accessLevel;
+	private String error;
 }
