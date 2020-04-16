@@ -6,6 +6,7 @@ package com.osadchuk.security.authorization.controller.rest;
 
 import com.osadchuk.security.authorization.model.ApiResponse;
 import com.osadchuk.security.authorization.model.SecretResource;
+import com.osadchuk.security.authorization.service.AuditLogService;
 import com.osadchuk.security.authorization.service.SecretResourceService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,31 +29,39 @@ public class SecretResourceRestController {
 
 	private final SecretResourceService secretResourceService;
 
+	private final AuditLogService auditLogService;
+
 	@Autowired
-	public SecretResourceRestController(SecretResourceService secretResourceService) {
+	public SecretResourceRestController(SecretResourceService secretResourceService,
+	                                    AuditLogService auditLogService) {
 		this.secretResourceService = secretResourceService;
+		this.auditLogService = auditLogService;
 	}
 
 	@GetMapping("/ids")
-	public List<Integer> getResourcesIds(){
+	public List<Integer> getResourcesIds(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails) {
+		auditLogService.addRecord(userDetails.getUsername(), "called GET /secretResource/ids endpoint");
 		return secretResourceService.getResourcesIds();
 	}
 
 	@PostMapping
 	public ApiResponse createResource(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails,
 	                                  @RequestBody SecretResource secretResource) {
+		auditLogService.addRecord(userDetails.getUsername(), "called POST /secretResource/ " + secretResource + "endpoint");
 		return secretResourceService.createResource(userDetails.getUsername(), secretResource);
 	}
 
 	@GetMapping
 	public ApiResponse readResource(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails,
 	                                @RequestParam int id) {
+		auditLogService.addRecord(userDetails.getUsername(), "called GET /secretResource/?id=" + id + " endpoint");
 		return secretResourceService.readResource(userDetails.getUsername(), id);
 	}
 
 	@PutMapping
 	public ApiResponse updateResource(@Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails,
 	                                  @RequestBody SecretResource secretResource) {
+		auditLogService.addRecord(userDetails.getUsername(), "called PUT /secretResource/ " + secretResource + " endpoint");
 		return secretResourceService.updateResource(userDetails.getUsername(), secretResource);
 	}
 }

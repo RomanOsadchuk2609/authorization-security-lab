@@ -25,13 +25,17 @@ public class SecretResourceService {
 
 	private final SecretResourceAccessControl accessControl;
 
+	private final AuditLogService auditLogService;
+
 	private List<SecretResource> secretResourceList = new ArrayList<>();
 
 	@Autowired
 	public SecretResourceService(UserDetailsServiceImpl userDetailsService,
-	                             SecretResourceAccessControl accessControl) {
+	                             SecretResourceAccessControl accessControl,
+	                             AuditLogService auditLogService) {
 		this.userDetailsService = userDetailsService;
 		this.accessControl = accessControl;
+		this.auditLogService = auditLogService;
 	}
 
 	public List<Integer> getResourcesIds() {
@@ -48,6 +52,7 @@ public class SecretResourceService {
 			secretResourceList.add(secretResource);
 			accessControl.saveObjectsAccessLevel(secretResource.getId(), usersAccessLevel);
 			apiResponse.setData(secretResource);
+			auditLogService.addRecord(username, "Created object: " + secretResource);
 		} catch (UsernameNotFoundException ex) {
 			apiResponse.setError(ex.getMessage());
 		}
@@ -62,11 +67,14 @@ public class SecretResourceService {
 				int usersAccessLevel = userDetailsService.getUsersAccessLevelByUsername(username);
 				if (accessControl.canRead(secretResourceId, usersAccessLevel)) {
 					apiResponse.setData(secretResource);
+					auditLogService.addRecord(username, "Read object: " + secretResource);
 				} else {
 					apiResponse.setError("User " + username + " can't read SecretResource with id " + secretResourceId);
+					auditLogService.addRecord(username, "User " + username + " can't read SecretResource with id " + secretResourceId);
 				}
 			} else {
 				apiResponse.setError("SecretResource with id " + secretResourceId + " not found");
+				auditLogService.addRecord(username, ("SecretResource with id " + secretResourceId + " not found"));
 			}
 		} catch (UsernameNotFoundException ex) {
 			apiResponse.setError(ex.getMessage());
@@ -85,11 +93,14 @@ public class SecretResourceService {
 					secretResourceList.remove(oldSecretResource);
 					secretResourceList.add(newSecretResource);
 					apiResponse.setData(newSecretResource);
+					auditLogService.addRecord(username, "Updated object: " + oldSecretResource);
 				} else {
 					apiResponse.setError("User " + username + " can't write into SecretResource with id " + secretResourceId);
+					auditLogService.addRecord(username, "User " + username + " can't write into SecretResource with id " + secretResourceId);
 				}
 			} else {
 				apiResponse.setError("SecretResource with id " + secretResourceId + " not found");
+				auditLogService.addRecord(username, ("SecretResource with id " + secretResourceId + " not found"));
 			}
 		} catch (UsernameNotFoundException ex) {
 			apiResponse.setError(ex.getMessage());

@@ -7,6 +7,7 @@ package com.osadchuk.security.authorization.service;
 import com.google.gson.Gson;
 import com.osadchuk.security.authorization.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,10 +27,17 @@ import java.util.List;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+	private final AuditLogService auditLogService;
+
 	@Value("classpath:static/users.json")
 	private Resource resourceFile;
 
 	private List<User> userList = Collections.emptyList();
+
+	@Autowired
+	public UserDetailsServiceImpl(AuditLogService auditLogService) {
+		this.auditLogService = auditLogService;
+	}
 
 	@PostConstruct
 	public void initUsers() {
@@ -43,6 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) {
+		auditLogService.addRecord(username, "Trying to login...");
 		return userList.stream()
 				.filter(user -> username.equals(user.getUsername()))
 				.map(user -> new org.springframework.security.core.userdetails.User(
